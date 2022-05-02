@@ -4,9 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "debug": "export DEBUG=* && npm run start",
     "dev": "ts-node-dev src/index.ts",
     "lint": "ts-standard",
-    "start": "node build/index.js",
+    "start": "npm run tsc && node --unhandled-rejections=strict build/index.js",
     "tsc": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

@@ -19,6 +19,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "argon2": "^0.28.5",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
     "dotenv": "^16.0.0",

@@ -18,12 +18,12 @@ class UsersController {
 
   async createUser (req: Request, res: Response): Promise<void> {
     req.body.password = await argon2.hash(req.body.password)
-    const userId = UsersService.create(req.body)
+    const userId = await UsersService.create(req.body)
     res.status(201).send({ id: userId })
   }
 
   async patchUser (req: Request, res: Response): Promise<void> {
-    if (req.body.password !== null || req.body.password !== undefined || req.body.password !== '') {
+    if (req.body.password != null) {
       req.body.password = await argon2.hash(req.body.password)
     }
     log(await UsersService.patchById(req.body.id, req.body))

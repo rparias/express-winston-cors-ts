@@ -13,7 +13,7 @@ class UsersService implements CRUD {
     return await UsersDao.removeUserById(id)
   }
 
-  async list (limit: number, page: number): Promise<CreateUserDto[]> {
+  async list (_limit: number, _page: number): Promise<CreateUserDto[]> {
     return await UsersDao.getUsers()
   }
 

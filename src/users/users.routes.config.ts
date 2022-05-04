@@ -1,5 +1,7 @@
 import { CommonRoutesConfig } from '../common/common.routes.config'
-import express, { Request, Response, NextFunction } from 'express'
+import UsersController from './controllers/users.controller'
+import UsersMiddleware from './middleware/users.middleware'
+import express from 'express'
 
 export class UsersRoutes extends CommonRoutesConfig {
   constructor (app: express.Application) {
@@ -8,29 +10,30 @@ export class UsersRoutes extends CommonRoutesConfig {
 
   configureRoutes (): express.Application {
     this.app.route('/users')
-      .get((_req: Request, res: Response) => {
-        res.status(200).send('List of users')
-      })
-      .post((_req: Request, res: Response) => {
-        res.status(200).send('Post of users')
-      })
+      .get(UsersController.listUsers)
+      .post(
+        UsersMiddleware.validateRequiredUserBodyFields,
+        UsersMiddleware.validateSameEmailDoesntExist,
+        UsersController.createUser
+      )
+
+    this.app.param('userId', UsersMiddleware.extractUserId)
 
     this.app.route('/users/:userId')
-      .all((_req: Request, _res: Response, _next: NextFunction) => {
-        // this middleware function runs before any request to /users/:userId
-      })
-      .get((req: Request, res: Response) => {
-        res.status(200).send(`GET requested for id ${req.params.userId}`)
-      })
-      .put((req: Request, res: Response) => {
-        res.status(200).send(`PUT requested for id ${req.params.userId}`)
-      })
-      .patch((req: Request, res: Response) => {
-        res.status(200).send(`PATCH requested for id ${req.params.userId}`)
-      })
-      .delete((req: Request, res: Response) => {
-        res.status(200).send(`DELETE requested for id ${req.params.userId}`)
-      })
+      .all(UsersMiddleware.validateUserExists)
+      .get(UsersController.getUserById)
+      .delete(UsersController.removeUser)
+
+    this.app.put('/users/:userId', [
+      UsersMiddleware.validateRequiredUserBodyFields,
+      UsersMiddleware.validateSameEmailBelongToSameUser,
+      UsersController.putUser
+    ])
+
+    this.app.patch('/users/:userId', [
+      UsersMiddleware.validatePatchEmail,
+      UsersController.patchUser
+    ])
 
     return this.app
   }

@@ -1,4 +1,4 @@
-import UsersDaoLocal from '../daos/users.dao.local'
+import UsersDaoMongo from '../daos/users.dao.mongo'
 import { CRUD } from '../../common/interfaces/crud.interface'
 import { CreateUserDto } from '../dto/create.user.dto'
 import { PutUserDto } from '../dto/put.user.dto'
@@ -6,31 +6,31 @@ import { PatchUserDto } from '../dto/patch.user.dto'
 
 class UsersService implements CRUD {
   async create (resource: CreateUserDto): Promise<string> {
-    return await UsersDaoLocal.addUser(resource)
+    return await UsersDaoMongo.addUser(resource)
   }
 
   async deleteById (id: string): Promise<string> {
-    return await UsersDaoLocal.removeUserById(id)
+    return await UsersDaoMongo.removeUserById(id)
   }
 
-  async list (_limit: number, _page: number): Promise<CreateUserDto[]> {
-    return await UsersDaoLocal.getUsers()
+  async list (limit: number, page: number): Promise<CreateUserDto[]> {
+    return await UsersDaoMongo.getUsers(limit, page)
   }
 
   async patchById (id: string, resource: PatchUserDto): Promise<string> {
-    return await UsersDaoLocal.patchUserById(id, resource)
+    return await UsersDaoMongo.updateUserById(id, resource)
   }
 
   async readById (id: string): Promise<CreateUserDto | undefined> {
-    return await UsersDaoLocal.getUserById(id)
+    return await UsersDaoMongo.getUserById(id)
   }
 
   async putById (id: string, resource: PutUserDto): Promise<string> {
-    return await UsersDaoLocal.putUserById(id, resource)
+    return await UsersDaoMongo.updateUserById(id, resource)
   }
 
   async getUserByEmail (email: string): Promise<CreateUserDto | null> {
-    return await UsersDaoLocal.getUserByEmail(email)
+    return await UsersDaoMongo.getUserByEmail(email)
   }
 }
 

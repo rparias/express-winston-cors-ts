@@ -6,7 +6,7 @@ import debug from 'debug'
 
 const log: debug.IDebugger = debug('app:in-memory-dao')
 
-class UsersDao {
+class UsersDaoLocal {
   users: CreateUserDto[] = []
 
   constructor () {
@@ -14,9 +14,9 @@ class UsersDao {
   }
 
   async addUser (user: CreateUserDto): Promise<string> {
-    user.id = shortid.generate()
+    user._id = shortid.generate()
     this.users.push(user)
-    return user.id
+    return user._id
   }
 
   async getUsers (): Promise<CreateUserDto[]> {
@@ -24,20 +24,20 @@ class UsersDao {
   }
 
   async getUserById (userId: string): Promise<CreateUserDto | undefined> {
-    return this.users.find((user: {id: string}) => user.id === userId)
+    return this.users.find((user: {_id: string}) => user._id === userId)
   }
 
   async putUserById (userId: string, user: PutUserDto): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: {id: string}) => obj.id === userId
+      (obj: {_id: string}) => obj._id === userId
     )
     this.users.splice(objIndex, 1, user)
-    return `${user.id} updated via put`
+    return `${user._id} updated via put`
   }
 
   async patchUserById (userId: string, user: PatchUserDto): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: {id: string}) => obj.id === userId
+      (obj: {_id: string}) => obj._id === userId
     )
     const currentUser = this.users[objIndex]
     const allowedPatchFields = [
@@ -58,7 +58,7 @@ class UsersDao {
 
   async removeUserById (userId: string): Promise<string> {
     const objIndex = this.users.findIndex(
-      (obj: {id: string}) => obj.id === userId
+      (obj: {_id: string}) => obj._id === userId
     )
     this.users.splice(objIndex, 1)
     return `${userId} removed`
@@ -77,4 +77,4 @@ class UsersDao {
   }
 }
 
-export default new UsersDao()
+export default new UsersDaoLocal()

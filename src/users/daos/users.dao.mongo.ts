@@ -47,7 +47,7 @@ class UsersDaoMongo {
   }
 
   async getUserById (userId: string): Promise<CreateUserDto | undefined> {
-    return await this.User.findOne({ _id: userId }).populate('User').exec()
+    return await this.User.findOne({ _id: userId }).exec()
   }
 
   async getUserByEmail (email: string): Promise<any> {

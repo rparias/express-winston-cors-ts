@@ -67,6 +67,12 @@ class UsersDaoMongo {
   async removeUserById (userId: string): Promise<any> {
     return await this.User.deleteOne({ _id: userId }).exec()
   }
+
+  async getUserByEmailWithPassword (email: string): Promise<any> {
+    return await this.User.findOne({ email: email })
+      .select(' _id email permissionFlags +password')
+      .exec()
+  }
 }
 
 export default new UsersDaoMongo()

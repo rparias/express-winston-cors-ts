@@ -32,6 +32,10 @@ class UsersService implements CRUD {
   async getUserByEmail (email: string): Promise<CreateUserDto | null> {
     return await UsersDaoMongo.getUserByEmail(email)
   }
+
+  async getUserByEmailWithPassword (email: string): Promise<any> {
+    return await UsersDaoMongo.getUserByEmailWithPassword(email)
+  }
 }
 
 export default new UsersService()

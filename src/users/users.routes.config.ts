@@ -1,4 +1,6 @@
+import { body } from 'express-validator'
 import { CommonRoutesConfig } from '../common/common.routes.config'
+import bodyValidationMiddleware from '../common/middleware/body.validation.middleware'
 import UsersController from './controllers/users.controller'
 import UsersMiddleware from './middleware/users.middleware'
 import express from 'express'
@@ -12,7 +14,11 @@ export class UsersRoutes extends CommonRoutesConfig {
     this.app.route('/users')
       .get(UsersController.listUsers)
       .post(
-        UsersMiddleware.validateRequiredUserBodyFields,
+        body('email').isEmail(),
+        body('password')
+          .isLength({ min: 5 })
+          .withMessage('Must include password (5+ characters)'),
+        bodyValidationMiddleware.verifyBodyFieldsErrors,
         UsersMiddleware.validateSameEmailDoesntExist,
         UsersController.createUser
       )
@@ -25,12 +31,28 @@ export class UsersRoutes extends CommonRoutesConfig {
       .delete(UsersController.removeUser)
 
     this.app.put('/users/:userId', [
-      UsersMiddleware.validateRequiredUserBodyFields,
+      body('email').isEmail(),
+      body('password')
+        .isLength({ min: 5 })
+        .withMessage('Must include password (5+ characters)'),
+      body('firstName').isString(),
+      body('lastName').isString(),
+      body('permissionFlags').isInt(),
+      bodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validateSameEmailBelongToSameUser,
       UsersController.putUser
     ])
 
     this.app.patch('/users/:userId', [
+      body('email').isEmail(),
+      body('password')
+        .isLength({ min: 5 })
+        .withMessage('Must include password (5+ characters)')
+        .optional(),
+      body('firstName').isString().optional(),
+      body('lastName').isString().optional(),
+      body('permissionFlags').isInt().optional(),
+      bodyValidationMiddleware.verifyBodyFieldsErrors,
       UsersMiddleware.validatePatchEmail,
       UsersController.patchUser
     ])

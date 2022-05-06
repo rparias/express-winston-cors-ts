@@ -2,6 +2,8 @@ import express from 'express'
 import debug from 'debug'
 import jwt from 'jsonwebtoken'
 import crypto from 'crypto'
+import dotenv from 'dotenv'
+dotenv.config({ path: process.cwd() + '/.env' })
 
 const log: debug.IDebugger = debug('app:auth-controller')
 

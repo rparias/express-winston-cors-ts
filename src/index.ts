@@ -6,6 +6,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import { CommonRoutesConfig } from './common/common.routes.config'
 import { UsersRoutes } from './users/users.routes.config'
+import { AuthRoutes } from './auth/auth.routes.config'
 import debug from 'debug'
 
 const dotenvResult = dotenv.config()
@@ -41,6 +42,7 @@ if (process.env.DEBUG === null || process.env.DEBUG === undefined || process.env
 app.use(expressWinston.logger(loggerOptions))
 
 routes.push(new UsersRoutes(app))
+routes.push(new AuthRoutes(app))
 
 const runningMessage = `Server running at http://localhost:${port}`
 

@@ -40,8 +40,7 @@ class UsersMiddleware {
     res: Response,
     next: NextFunction
   ): Promise<void> {
-    const user = await usersService.getUserByEmail(req.body.email)
-    if (user && user._id === req.params.userId) {
+    if (res.locals.user._id === req.params.userId) {
       next()
     } else {
       res.status(401).send({
@@ -71,6 +70,7 @@ class UsersMiddleware {
   ): Promise<void> {
     const user = await usersService.readById(req.params.userId)
     if (user) {
+      res.locals.user = user
       next()
     } else {
       res.status(401).send({
@@ -86,6 +86,23 @@ class UsersMiddleware {
   ): Promise<void> {
     req.body.id = req.params.userId
     next()
+  }
+
+  async userCantChangePermission (
+    req: Request,
+    res: Response,
+    next: NextFunction
+  ): Promise<any> {
+    if (
+      'permissionFlags' in req.body &&
+      req.body.permissionFlags !== res.locals.user.permissionFlags
+    ) {
+      res.status(400).send({
+        errors: ['User cannot change permission flags']
+      })
+    } else {
+      next()
+    }
   }
 }
 

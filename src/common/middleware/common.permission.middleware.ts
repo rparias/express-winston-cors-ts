@@ -5,7 +5,7 @@ import debug from 'debug'
 const log: debug.IDebugger = debug('app:common-permission-middleware')
 
 class CommonPermissionMiddleware {
-  permissionFlagRequires (requiredPermissionFlag: PermissionFlag) {
+  permissionFlagRequired (requiredPermissionFlag: PermissionFlag) {
     return (
       _req: express.Request,
       res: express.Response,

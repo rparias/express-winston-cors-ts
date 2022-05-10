@@ -1,4 +1,5 @@
 import express from 'express'
+import helmet from 'helmet'
 import * as http from 'http'
 import * as winston from 'winston'
 import * as expressWinston from 'express-winston'
@@ -25,6 +26,9 @@ app.use(express.json())
 
 // here we are adding middleware to allow cross-origin requests
 app.use(cors())
+
+// here we are adding a security addition with helmet
+app.use(helmet())
 
 const loggerOptions: expressWinston.LoggerOptions = {
   transports: [new winston.transports.Console()],
